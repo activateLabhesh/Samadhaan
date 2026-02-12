@@ -39,3 +39,8 @@ class ChatResponse(BaseModel):
     response: str
     audio_base64: Optional[str] = None
     model_name: str
+class RiskClassificationResponse(BaseModel):
+    intensity: Literal["low", "medium", "high"]
+    confidence: float
+    reason: str
+    model_name: str

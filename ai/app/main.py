@@ -24,11 +24,13 @@ from app.schemas import (
     ExtractionRequest,
     ExtractionResponse,
     ChatRequest,
-    ChatResponse
+    ChatResponse,
+    RiskClassificationResponse
 )
 from app.utils.audio import download_audio, save_upload, delete_temp_file
 from app.agents.listener import get_listener_agent
 from app.agents.brain import get_brain_agent
+from app.agents.risk_analyzer import get_risk_analyzer_agent
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,6 +38,7 @@ async def lifespan(app: FastAPI):
     print("Loading models...")
     get_listener_agent()
     get_brain_agent()
+    get_risk_analyzer_agent()
     print("Models loaded.")
     yield
     # Cleanup if needed
@@ -134,6 +137,17 @@ async def extract(request: ExtractionRequest):
         )
         return result
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/analyze-risk", response_model=RiskClassificationResponse)
+async def analyze_risk(text: str = Body(..., embed=True)):
+    try:
+        analyzer = get_risk_analyzer_agent()
+        result = analyzer.analyze_risk(text)
+        return result
+    except Exception as e:
+        import traceback
+        logger.error(f"Risk analysis error: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))
 
 from app.agents.speaker import get_speaker_agent
