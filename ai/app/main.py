@@ -80,7 +80,16 @@ async def transcribe(
             "English": "en",
             "Hindi": "hi",
             "Bengali": "bn",
-            "Tamil": "ta"
+            "Tamil": "ta",
+            "Punjabi": "pa",
+            "Marathi": "mr",
+            "Gujarati": "gu",
+            "Kannada": "kn",
+            "Telugu": "te",
+            "Malayalam": "ml",
+            "Odia": "or",
+            "Urdu": "ur",
+            "Maithili": "mai",
         }
         language_hint = lang_map.get(language)
         
@@ -127,16 +136,27 @@ async def extract(request: ExtractionRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+from app.agents.speaker import get_speaker_agent
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
         brain = get_brain_agent()
+        speaker = get_speaker_agent()
+        
         response_text = brain.chat(request.text, request.history, request.language)
+        
+        # Generate TTS
+        audio_base64 = speaker.text_to_speech(response_text, request.language)
+        
         return ChatResponse(
             response=response_text,
+            audio_base64=audio_base64,
             model_name=brain.llm.model_name
         )
     except Exception as e:
+        import traceback
+        logger.error(f"Chat Error: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

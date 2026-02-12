@@ -37,4 +37,5 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str
+    audio_base64: Optional[str] = None
     model_name: str

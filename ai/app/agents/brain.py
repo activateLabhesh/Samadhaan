@@ -128,11 +128,12 @@ class BrainAgent:
             f"1. [AUTHORITY]: You only collect civic complaints (potholes, street lights, waste, water, etc.).\n"
             f"2. [DEFLECTION]: If a user asks something UNRELATED to civic issues (personal, trivia, etc.), politely ignore it and state you only handle civic complaints.\n"
             f"3. [STRUCTURE]:\n"
-            f"   - START with a single greeting word in {language} (e.g., 'Hi!' or 'Hello!').\n"
-            f"   - BODY: ONE sentence only. Either confirm the specific civic issue is recorded OR ask for a civic issue if they haven't provided one OR deflect if the query is 'wrong'/off-topic.\n"
-            f"   - END with: 'Thank you, your response is with us and has been communicated for proper verification.' (in {language})\n"
-            f"Example (Off-topic): 'Hi! I am a civic portal and can only assist with municipal issues. Do you have a civic complaint? Thank you, your response is with us and has been communicated for proper verification.'\n"
-            f"Example (Complaint): 'Hi! I have recorded your complaint regarding the broken street light for immediate action. Thank you, your response is with us and has been communicated for proper verification.'"
+            f"   - START: Respond in {language}.\n"
+            f"   - BODY: Confirmation of issue or help with civic complaint.\n"
+            f"   - ALWAYS END by asking: 'Is there anything else I can help you with?' in {language}.\n"
+            f"4. [TERMINATION]: If the user says 'No', 'That is all', 'Nothing else', or similar, respond with: 'Thank you, your complaint has been filed and is being processed for verification.' in {language} and add the token [FINISH] at the very end.\n"
+            f"Example (Complaint): 'I have recorded your issue regarding the waste pile and will forward it to the department. Is there anything else I can help you with?'\n"
+            f"Example (Final): 'Thank you, your complaint has been filed and is being processed for verification. [FINISH]'"
         )
         
         messages = [

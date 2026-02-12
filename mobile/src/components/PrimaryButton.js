@@ -1,15 +1,18 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 import { theme } from "../utils/theme";
 
-const PrimaryButton = ({ label, onPress, variant = "primary", style }) => {
+const PrimaryButton = ({ label, onPress, variant = "primary", style, disabled }) => {
   const isPrimary = variant === "primary";
+  const isAccent = variant === "accent";
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.base,
-        isPrimary ? styles.primary : styles.secondary,
-        pressed && styles.pressed,
+        isPrimary ? styles.primary : isAccent ? styles.accent : styles.secondary,
+        (pressed || disabled) && styles.pressed,
+        disabled && styles.disabled,
         style,
       ]}
     >
@@ -42,9 +45,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
+  accent: {
+    backgroundColor: theme.colors.accent,
+  },
+  disabled: {
+    opacity: 0.5,
+  },
   label: {
     fontWeight: "600",
-    fontSize: 14,
+    fontSize: 16,
   },
   primaryLabel: {
     color: "#fff",
@@ -53,7 +62,7 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
   pressed: {
-    opacity: 0.85,
+    opacity: 0.7,
   },
 });
 

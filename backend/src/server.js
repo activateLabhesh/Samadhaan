@@ -1,7 +1,7 @@
 const http = require("http");
 
-const app = require("./app");
 const { port } = require("./config/env");
+const app = require("./app");
 const { initializeSocketServer } = require("./realtime/socketServer");
 
 const server = http.createServer(app);
